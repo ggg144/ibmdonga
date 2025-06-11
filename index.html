@@ -1,25 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Student Portfolio</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <style>
-    body.blue { background-color: #3b82f6; color: white; }
-    body.green { background-color: #10b981; color: white; }
-    body.red { background-color: #ef4444; color: white; }
-    body.purple { background-color: #8b5cf6; color: white; }
-    body.default { background-color: white; color: black; }
-    body { transition: background-color 0.5s ease, color 0.5s ease; }
-  </style>
-</head>
-<body class="bg-gray-950 text-white min-h-screen p-6">
-<div class="max-w-4xl mx-auto">
-
-<!-- Theme Picker -->
+<!-- Insert this where you want the color picker to appear -->
 <div class="flex justify-center mt-6">
   <label for="theme-color" class="text-lg">Choose your theme color: </label>
   <select id="theme-color" class="ml-2 p-2 border border-gray-300 rounded">
@@ -31,40 +12,127 @@
   </select>
 </div>
 
+<div>
+  <h2 class="text-2xl font-bold text-black dark:text-white">Yuldoshev Behruz</h2>
+  <p class="text-gray-600 dark:text-gray-400">Student of Dong-A University</p>
+  <div id="clock" class="text-lg font-mono text-gray-700 dark:text-gray-300 mt-2"></div>
+</div>
+<head>
+  <style>
+    body.blue {
+      background-color: #3b82f6;
+      color: white;
+    }
+
+    body.green {
+      background-color: #10b981;
+      color: white;
+    }
+
+    body.red {
+      background-color: #ef4444;
+      color: white;
+    }
+
+    body.purple {
+      background-color: #8b5cf6;
+      color: white;
+    }
+
+    body.default {
+      background-color: white;
+      color: black;
+    }
+
+    body {
+      transition: background-color 0.5s ease, color 0.5s ease;
+    }
+  </style>
+</head>
 
 
-<!-- Authentication -->
-<script>
-  const ACCESS_CONFIG = { code: "korea", storageKey: "siteAuthToken", expiryHours: 12, retryLimit: 3 };
+<head>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Portfolio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body class="bg-gray-950 text-white min-h-screen p-6">
+<div class="max-w-4xl mx-auto">
+  <!-- your content goes here -->
+</div>
+  <!-- Authentication -->
+ <script>
+  const ACCESS_CONFIG = {
+    code: "korea",
+    storageKey: "siteAuthToken",
+    expiryHours: 12,
+    retryLimit: 3
+  };
+
   function protectSite() {
     const authData = JSON.parse(localStorage.getItem(ACCESS_CONFIG.storageKey) || "null");
     if (!authData || Date.now() > authData.timestamp + ACCESS_CONFIG.expiryHours * 3600000) {
-      let attempts = 0, grantedAccess = false;
+      let attempts = 0;
+      let grantedAccess = false;
       while (attempts < ACCESS_CONFIG.retryLimit && !grantedAccess) {
         const input = prompt(`Enter access code (Attempt ${attempts + 1}/${ACCESS_CONFIG.retryLimit}):`);
         if (!input) break;
         if (input.toLowerCase() === ACCESS_CONFIG.code) {
           localStorage.setItem(ACCESS_CONFIG.storageKey, JSON.stringify({ timestamp: Date.now() }));
           grantedAccess = true;
-        } else { attempts++; }
+        } else {
+          attempts++;
+        }
       }
       if (!grantedAccess) {
-        document.body.innerHTML = `<div style="position:fixed;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;background:#111;color:red;font-family:Arial;text-align:center;padding:20px;"><h1 style="font-size:2.5rem">ACCESS DENIED</h1><p style="font-size:1.2rem">Invalid access code</p><button onclick="location.reload()" style="margin-top:20px;padding:10px 20px;background:#333;color:white;border:none;cursor:pointer;">Try Again</button></div>`;
+        document.body.innerHTML = `
+          <div style="
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: #111;
+            color: red;
+            font-family: Arial;
+            text-align: center;
+            padding: 20px;">
+            <h1 style="font-size: 2.5rem">ACCESS DENIED</h1>
+            <p style="font-size: 1.2rem">Invalid access code</p>
+            <button onclick="location.reload()" style="
+              margin-top: 20px;
+              padding: 10px 20px;
+              background: #333;
+              color: white;
+              border: none;
+              cursor: pointer;">
+              Try Again
+            </button>
+          </div>`;
         return;
       }
     }
     document.body.style.display = '';
   }
+
   document.addEventListener('DOMContentLoaded', protectSite);
+
   function logout() {
     localStorage.removeItem(ACCESS_CONFIG.storageKey);
     location.reload();
   }
 </script>
-<div class="text-right mb-4">
-  <button onclick="logout()" class="text-sm text-red-400 underline hover:text-red-500">Logout</button>
-</div>
- <!-- Header -->
+  
+
+  <!-- Header -->
   <div class="bg-gray-900 p-4 rounded-xl mb-6 flex items-center justify-between">
     <div>
       <h2 class="text-2xl font-bold text-white">Yuldoshev Behruz</h2>
@@ -82,12 +150,6 @@
     <div>
       <div id="overall-grade" class="text-xl font-bold text-green-400">Loading...</div>
       <div class="text-md text-white mt-1" id="cwg-display"></div>
-<!-- Progress bar for CWG -->
-<div class="w-full bg-gray-700 rounded-full h-2 mt-2">
-  <div id="cwg-progress" class="bg-green-400 h-2 rounded-full" style="width: 0%"></div>
-</div>
-
-
     </div>
   </div>
 
@@ -103,9 +165,6 @@
       <div id="uploadProgress" class="h-1 bg-teal-600 rounded-full mt-2 hidden animate-pulse"></div>
     </form>
   </div>
-
-
-
 <!-- Week 2 Folder Link -->
 <div class="bg-gray-900 p-4 rounded-xl mb-6">
   <h2 class="text-2xl font-bold text-teal-400 mb-4">WEEK 2 Folder</h2>
@@ -241,7 +300,10 @@
   </a>
 </div>
 
- <!-- Upload and Weekly Sections Omitted for Brevity -->
+
+ 
+
+  <!-- Upload and Weekly Sections Omitted for Brevity -->
 
   <!-- Grade Breakdown Section -->
   <div class="bg-gray-900 p-6 rounded-xl mb-6">
@@ -263,70 +325,46 @@
 </div>
 
 <script>
-const gradeUrl = "https://script.google.com/macros/s/AKfycbwzW4dRmqLVL4zxEkfaGy9qFc90SXwsPqeLpxZ2DDScAktWpxdRLG_O6w7bj7xG0Kc7Rg/exec";
+const gradeUrl = "https://script.google.com/macros/s/AKfycbwQxPjDzQwJXzy5XjucjwlJhcDEvPI_OyDKITp_VxfMRRK-cX9QcQiyS4KEhSHnD5SvJg/exec";
 
-
-
-async function fetchCWG() {
+async function fetchGrades() {
   try {
-    const res = await fetch(gradeUrl);
-    const data = await res.json();
+    const res = await axios.get(gradeUrl);
+    const data = res.data.files;
+    let total = 0, received = 0;
+    const table = document.getElementById("gradeTable");
+    const labels = [], scores = [];
 
-    // CWG summary
-    const cwgEl = document.getElementById("cwg-display");
-    cwgEl.innerHTML = `
-      <div class="mb-2">
-        Current Working Grade (CWG): 
-        <span class="font-bold text-green-400">${data.percent}%</span> 
-        <span class="text-sm">(${data.letter})</span>
-        ${data.extra > 0 ? `<div class="text-sm text-yellow-300">+${data.extra} Extra Points</div>` : ""}
-      </div>
-      <div class="mt-2">
-        <table class="text-sm w-full text-white border border-gray-700 rounded">
-          <thead>
-            <tr class="bg-gray-800">
-              <th class="py-1 px-2">Category</th>
-              <th class="py-1 px-2">Weight</th>
-              <th class="py-1 px-2">Your %</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${Object.entries(data.breakdown).map(([cat, val]) => `
-              <tr>
-                <td class="py-1 px-2">${cat}</td>
-                <td class="py-1 px-2">${val.weight}%</td>
-                <td class="py-1 px-2">${val.percent}%</td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-      </div>
-    `;
+    table.innerHTML = "";
+    data.forEach(item => {
+      const percent = ((item.folder / item.timestamp) * 100).toFixed(1);
+      total += item.timestamp;
+      received += item.folder;
 
-    // Progress bar
-    document.getElementById("cwg-progress").style.width = `${data.percent}%`;
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td class="border-b border-gray-800 px-4 py-2">${item.name}</td>
+        <td class="border-b border-gray-800 px-4 py-2">${item.url}</td>
+        <td class="border-b border-gray-800 px-4 py-2">${item.folder}</td>
+        <td class="border-b border-gray-800 px-4 py-2">${item.timestamp}</td>
+        <td class="border-b border-gray-800 px-4 py-2">${percent}%</td>
+      `;
+      table.appendChild(row);
+      labels.push(item.name);
+      scores.push(percent);
+    });
 
-    // Grade Breakdown Table
-    const gradeTable = document.getElementById("gradeTable");
-    gradeTable.innerHTML = data.grades.map(g => `
-      <tr>
-        <td class="border-b border-gray-700 px-4 py-2">${g.name}</td>
-        <td class="border-b border-gray-700 px-4 py-2">${capitalize(g.type)}</td>
-        <td class="border-b border-gray-700 px-4 py-2">${g.grade}</td>
-        <td class="border-b border-gray-700 px-4 py-2">${g.max}</td>
-        <td class="border-b border-gray-700 px-4 py-2">${g.percent}%</td>
-      </tr>
-    `).join('');
+    const overall = (received / total) * 100;
+    const letter = getLetterGrade(overall);
+    document.getElementById("overall-grade").innerText = `${overall.toFixed(1)}% (${letter})`;
+    document.getElementById("cwg-display").innerText = `Current Working Grade (CWG): ${received} / ${total} (${overall.toFixed(1)}%)`;
 
-  } catch (e) {
-    console.error("CWG Fetch Error:", e);
-    document.getElementById("cwg-display").innerText = "CWG not available.";
+    renderChart(labels, scores);
+  } catch (err) {
+    console.error(err);
+    document.getElementById("overall-grade").innerText = "Error loading grades.";
   }
 }
-function capitalize(str) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
 
 function getLetterGrade(percent) {
   if (percent >= 95) return "A+";
@@ -372,7 +410,7 @@ function updateClock() {
 
 setInterval(updateClock, 1000);
 updateClock();
-fetchCWG(); // ✅ This is the correct call
+fetchGrades();
 </script>
 
 <script>
@@ -394,8 +432,5 @@ fetchCWG(); // ✅ This is the correct call
     }
   });
 </script>
-
-
-
 </body>
 </html>
