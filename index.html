@@ -12,20 +12,13 @@
   </select>
 </div>
 
-
 <div>
-
-
-
   <h2 class="text-2xl font-bold text-black dark:text-white">Yuldoshev Behruz</h2>
   <p class="text-gray-600 dark:text-gray-400">Student of Dong-A University</p>
   <div id="clock" class="text-lg font-mono text-gray-700 dark:text-gray-300 mt-2"></div>
 </div>
 <head>
   <style>
-input:focus { outline: none; box-shadow: 0 0 0 2px #14b8a6; }
-
-
     body.blue {
       background-color: #3b82f6;
       color: white;
@@ -67,63 +60,76 @@ input:focus { outline: none; box-shadow: 0 0 0 2px #14b8a6; }
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
-
+<body class="bg-gray-950 text-white min-h-screen p-6">
 <div class="max-w-4xl mx-auto">
   <!-- your content goes here -->
 </div>
-<div id="authOverlay" class="fixed inset-0 z-50 bg-black bg-opacity-90 flex flex-col items-center justify-center text-white" style="display: none;">
-  <h1 class="text-2xl font-bold mb-4">🔒 Enter Access Code</h1>
-  <input id="accessInput" type="password" placeholder="Access Code" class="px-4 py-2 rounded text-black" />
-  <button onclick="checkAccessCode()" class="mt-4 bg-teal-500 hover:bg-teal-600 px-4 py-2 rounded text-white">Unlock</button>
-  <p id="authError" class="text-red-400 mt-2 hidden">Incorrect code. Try again.</p>
-</div>
+  <!-- Authentication -->
+ <script>
+  const ACCESS_CONFIG = {
+    code: "korea",
+    storageKey: "siteAuthToken",
+    expiryHours: 12,
+    retryLimit: 3
+  };
 
-
-
-
-
-<script>
-  const ACCESS_CODE = "korea";
-  const STORAGE_KEY = "siteAuthCode";
-  const EXPIRY_HOURS = 12;
-
-  function showAuth() {
-    document.getElementById("authOverlay").style.display = "flex";
-  }
-
-  function checkAccessCode() {
-    const input = document.getElementById("accessInput").value.trim().toLowerCase();
-    if (input === ACCESS_CODE) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ time: Date.now() }));
-      document.getElementById("authOverlay").style.display = "none";
-      document.body.style.display = "";
-    } else {
-      document.getElementById("authError").style.display = "block";
+  function protectSite() {
+    const authData = JSON.parse(localStorage.getItem(ACCESS_CONFIG.storageKey) || "null");
+    if (!authData || Date.now() > authData.timestamp + ACCESS_CONFIG.expiryHours * 3600000) {
+      let attempts = 0;
+      let grantedAccess = false;
+      while (attempts < ACCESS_CONFIG.retryLimit && !grantedAccess) {
+        const input = prompt(`Enter access code (Attempt ${attempts + 1}/${ACCESS_CONFIG.retryLimit}):`);
+        if (!input) break;
+        if (input.toLowerCase() === ACCESS_CONFIG.code) {
+          localStorage.setItem(ACCESS_CONFIG.storageKey, JSON.stringify({ timestamp: Date.now() }));
+          grantedAccess = true;
+        } else {
+          attempts++;
+        }
+      }
+      if (!grantedAccess) {
+        document.body.innerHTML = `
+          <div style="
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: #111;
+            color: red;
+            font-family: Arial;
+            text-align: center;
+            padding: 20px;">
+            <h1 style="font-size: 2.5rem">ACCESS DENIED</h1>
+            <p style="font-size: 1.2rem">Invalid access code</p>
+            <button onclick="location.reload()" style="
+              margin-top: 20px;
+              padding: 10px 20px;
+              background: #333;
+              color: white;
+              border: none;
+              cursor: pointer;">
+              Try Again
+            </button>
+          </div>`;
+        return;
+      }
     }
+    document.body.style.display = '';
   }
 
-  function checkStoredAccess() {
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
-    if (saved && Date.now() < saved.time + EXPIRY_HOURS * 3600000) {
-      document.body.style.display = "";
-    } else {
-      showAuth();
-    }
-  }
+  document.addEventListener('DOMContentLoaded', protectSite);
 
   function logout() {
-    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(ACCESS_CONFIG.storageKey);
     location.reload();
   }
-
-  document.addEventListener("DOMContentLoaded", () => {
-    document.body.style.display = "none";
-    checkStoredAccess();
-  });
 </script>
-<button onclick="logout()" class="text-sm text-red-400 underline hover:text-red-500">Logout</button>
-
-
   
 
   <!-- Header -->
@@ -293,7 +299,6 @@ input:focus { outline: none; box-shadow: 0 0 0 2px #14b8a6; }
     📸 WEEK 17 - SCREENSHOTS
   </a>
 </div>
-
 
  
 
